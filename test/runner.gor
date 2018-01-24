@@ -1,0 +1,12 @@
+#!/usr/bin/env gore
+package main
+
+import "flag"
+import "fmt"
+
+func main() {
+	flag.Parse()
+	args := flag.Args()
+	fmt.Printf("%v\n", args)
+	fmt.Println("hello world!")
+}
