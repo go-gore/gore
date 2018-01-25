@@ -43,13 +43,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// defer temp file removal to follow execution of the source
-	// the logic here is probably not necessary but is intended to protect against deleting
-	// something that we should not be deleting from the file system in case I am wrong.
-	if strings.HasPrefix(filepath.Base(outPath), "run_") && filepath.Ext(outPath) == ".go" {
-		defer os.Remove(outPath)
-	}
-
 	// create the `go run` command for execution of the source file
 	args[0] = outPath
 	cmdArgs := []string{"run"}
@@ -60,25 +53,37 @@ func main() {
 	// Define the command for execution of the source file
 	// & capture the stdout and stderr pipes to push through these streams during execution
 	cmd := exec.Command("go", cmdArgs...)
-	stdout, stdOutErr := cmd.StdoutPipe()
-	stderr, stdErrErr := cmd.StderrPipe()
-	if stdOutErr != nil {
+	stdoutPipe, stdOutPipeErr := cmd.StdoutPipe()
+	stderrPipe, stdErrPipeErr := cmd.StderrPipe()
+	if stdOutPipeErr != nil {
+		log.Fatal(stdOutPipeErr)
+	}
+	if stdErrPipeErr != nil {
+		log.Fatal(stdErrPipeErr)
+	}
+	// execute the source code
+	if startErr := cmd.Start(); startErr != nil {
+		log.Fatal(startErr)
+	}
+	// write to stdout if data present
+	if _, stdOutErr := io.Copy(os.Stdout, stdoutPipe); stdOutErr != nil {
 		log.Fatal(stdOutErr)
 	}
+	// write to stderr if data present
+	_, stdErrErr := io.Copy(os.Stderr, stderrPipe)
 	if stdErrErr != nil {
 		log.Fatal(stdErrErr)
 	}
-	// execute the source code
-	if err := cmd.Start(); err != nil {
-		log.Fatal(err)
+
+	returnedErr := cmd.Wait()
+	// defer temp file removal to follow execution of the source
+	// the logic here is probably not necessary but is intended to protect against deleting
+	// something that we should not be deleting from the file system in case I am wrong.
+	if strings.HasPrefix(filepath.Base(outPath), "run_") && filepath.Ext(outPath) == ".go" {
+		os.Remove(outPath)
 	}
-	// write to stdout if data present
-	if _, err := io.Copy(os.Stdout, stdout); err != nil {
-		log.Fatal(err)
-	}
-	// write to stderr if data present
-	if _, err := io.Copy(os.Stderr, stderr); err != nil {
-		log.Fatal(err)
+	if returnedErr != nil {
+		os.Exit(1) // assign a default non-zero fail code value of 1 for all failures
 	}
 
 }
