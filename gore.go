@@ -4,6 +4,7 @@ package main
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -13,8 +14,56 @@ import (
 	"strings"
 )
 
+const (
+	version = "0.1.0"
+
+	usage = `Usage: gore (options) [args]
+`
+
+	help = `=================================================
+ gore
+ Copyright 2018 Christopher Simpkins
+ MIT License
+
+ Source: https://github.com/go-gore/gore
+=================================================
+ Usage:
+   $ gore (options) [args]
+
+ Options:
+  -h, --help           Application help
+      --usage          Application usage
+  -v, --version        Application version
+`
+)
+
+var versionShort, versionLong, helpShort, helpLong, usageLong *bool
+
+func init() {
+	// define available command line flags
+	versionShort = flag.Bool("v", false, "Application version")
+	versionLong = flag.Bool("version", false, "Application version")
+	helpShort = flag.Bool("h", false, "Help")
+	helpLong = flag.Bool("help", false, "Help")
+	usageLong = flag.Bool("usage", false, "Usage")
+}
+
 func main() {
 	flag.Parse()
+
+	// parse command line flags and handle them
+	switch {
+	case *versionShort, *versionLong:
+		fmt.Printf("gore v%s\n", version)
+		os.Exit(0)
+	case *helpShort, *helpLong:
+		fmt.Println(help)
+		os.Exit(0)
+	case *usageLong:
+		fmt.Println(usage)
+		os.Exit(0)
+	}
+
 	args := flag.Args()
 
 	// read the source file at (non-flag) argument slice position 0
