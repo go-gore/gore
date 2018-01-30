@@ -9,4 +9,9 @@ func main() {
 	args := flag.Args()
 	fmt.Printf("%v\n", args)
 	fmt.Println("hello world!")
+	hiThere()
+}
+
+func hiThere() {
+    fmt.Println("hi there!")
 }
