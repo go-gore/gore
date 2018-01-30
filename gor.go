@@ -1,4 +1,4 @@
-// gore.go links Go source code files to the go compiler + runtime to create "executable" Go source code files
+// gor.go links Go source code files to the go compiler + runtime to create "executable" Go source code files
 package main
 
 import (
@@ -17,18 +17,18 @@ import (
 const (
 	version = "0.1.0"
 
-	usage = `Usage: gore (options) [args]
+	usage = `Usage: gor (options) [args]
 `
 
 	help = `=================================================
- gore
+ gor
  Copyright 2018 Christopher Simpkins
  MIT License
 
- Source: https://github.com/go-gore/gore
+ Source: https://github.com/go-rillas/gor
 =================================================
  Usage:
-   $ gore (options) [args]
+   $ gor (options) [args]
 
  Options:
   -h, --help           Application help
@@ -47,6 +47,19 @@ func init() {
 	helpLong = flag.Bool("help", false, "Help")
 	usageLong = flag.Bool("usage", false, "Usage")
 }
+
+//type Session struct {
+//	FilePath       string
+//	File           *ast.File
+//	Fset           *token.FileSet
+//	Types          *types.Config
+//	TypeInfo       types.Info
+//	ExtraFilePaths []string
+//	ExtraFiles     []*ast.File
+//
+//	mainBody         *ast.BlockStmt
+//	storedBodyLength int
+//}
 
 func main() {
 	flag.Parse()
@@ -82,7 +95,8 @@ func main() {
 	basePath := filepath.Base(absPath)
 	baseList := strings.Split(basePath, ".")
 	baseName := baseList[0]
-	// create temp out file path for the go source code to be executed
+
+	//create temp out file path for the go source code to be executed
 	outName := "run_" + baseName + ".go"
 	outPath := filepath.Join(dirPath, outName)
 
@@ -92,12 +106,73 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// create the `go run` command for execution of the source file
-	args[0] = outPath
-	cmdArgs := []string{"run"}
-	for _, x := range args {
-		cmdArgs = append(cmdArgs, x)
+	// get other go source files in the same directory as requested file
+	workingDir, err := os.Open(dirPath)
+	if err != nil {
+		log.Fatalf("failed to open directory: %v", err)
 	}
+	defer workingDir.Close()
+
+	var goSourceList []string
+	testSourceList, _ := workingDir.Readdirnames(0)
+	for _, goSourceNeedle := range testSourceList {
+		if goSourceNeedle != filepath.Base(outPath) {
+			if strings.HasSuffix(goSourceNeedle, ".go") && !strings.Contains(goSourceNeedle, "_test.go") {
+				goSourceList = append(goSourceList, goSourceNeedle)
+			}
+		}
+	}
+
+	// TEMP CODE
+	//src, _ := ioutil.ReadFile(outPath)
+	//s := &Session{
+	//	Fset: token.NewFileSet(),
+	//	Types: &types.Config{
+	//		Importer: importer.Default(),
+	//	},
+	//}
+	//s.FilePath = outPath
+	//
+	//astf, err := parser.ParseFile(s.Fset, "", src, parser.Mode(0))
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//packages := make([]string, len(astf.Imports))
+	//for i, imprt := range astf.Imports {
+	//	packages[i] = imprt.Path.Value
+	//}
+	//
+	//var files []string
+	//for _, packageName := range packages {
+	//	packageName = strings.Replace(packageName, "\"", "", -1)  // remove the double quotes around package names
+	//	goPkg, err := build.Import(packageName, ".", 0)
+	//	if err != nil {
+	//		var err2 error
+	//		goPkg, err2 = build.ImportDir(packageName, 0)
+	//		if err2 != nil {
+	//			log.Fatal(err)
+	//		}
+	//	}
+	//
+	//	for _, f := range goPkg.GoFiles {
+	//		files = append(files, filepath.Join(goPkg.Dir, f))
+	//	}
+	//}
+	//
+	//for _, afile := range files {
+	//	fmt.Println(afile)
+	//}
+
+	// create the `go run` command for execution of the source file
+	cmdArgs := []string{"run"}
+	if len(args) > 1 {
+		cmdArgs = append(cmdArgs, args[1:]...) // arguments to the executable excluding the path to the .gor file at slice position 0
+	}
+	cmdArgs = append(cmdArgs, outPath) // the go source file with the main function requested by user
+	//cmdArgs = append(cmdArgs, goSourceList...) // additional source file paths in same directory
+
+	//fmt.Println(cmdArgs)
 
 	// Define the command for execution of the source file
 	// & capture the stdout and stderr pipes to push through these streams during execution
