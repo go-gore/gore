@@ -1,8 +1,8 @@
-project_name: gore
+project_name: gor
 release:
   github:
-    owner: go-gore
-    name: gore
+    owner: go-rillas
+    name: gor
   name_template: '{{.Tag}}'
   # If set to true, will not auto-publish the release.
   # Default is false.
@@ -22,7 +22,7 @@ builds:
       goarch: 386
   main: .
   ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
-  binary: gore
+  binary: gor
 archive:
   format: tar.gz
   name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm
