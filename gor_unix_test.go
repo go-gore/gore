@@ -1,3 +1,5 @@
+// +build linux darwin
+
 package main
 
 import (
@@ -9,17 +11,17 @@ import (
 
 // Golang stdlib: bytes package
 
-func TestBytes(t *testing.T) {
+func TestBytesDirectOnUnix(t *testing.T) {
 	testpath := filepath.Join("test", "bytes")
-	response := subprocess.RunShell("", "", "gor", testpath)
+	response := subprocess.RunShell("", "", testpath)
 	if response.StdOut != "true\n" {
 		t.Errorf("[FAIL] Expected response of 'true' and received response '%s'", response.StdOut)
 	}
 }
 
-func TestBytesGor(t *testing.T) {
+func TestBytesGorDirectOnUnix(t *testing.T) {
 	testpath := filepath.Join("test", "bytes.gor")
-	response := subprocess.RunShell("", "", "gor", testpath)
+	response := subprocess.RunShell("", "", testpath)
 	if response.StdOut != "true\n" {
 		t.Errorf("[FAIL] Expected response of 'true' and received response '%s'", response.StdOut)
 	}
