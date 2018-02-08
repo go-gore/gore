@@ -6,9 +6,10 @@ platform:
 clone_folder: C:\GOPATH\src\github.com\go-rillas\gor
 environment:
   GOPATH: C:\GOPATH
-  GOBIN: C:\GOPATH\bin
+  GOBIN: %GOPATH%\bin
 build_script:
 - cmd: go get -v -t github.com/go-rillas/gor/...
+- cmd: ./gor.exe -h
 - cmd: gor.exe -h
 test_script:
 - cmd: go test -v ./...
