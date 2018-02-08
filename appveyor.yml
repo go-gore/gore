@@ -10,7 +10,8 @@ environment:
 build_script:
 - cmd: set PATH=%GOBIN%;%PATH%
 - cmd: go get -v -t github.com/go-rillas/gor/...
-- cmd: C:\GOPATH\bin\gor.exe -h
-- cmd: gor.exe -h
+- cmd: assoc .gor=gor.exe
+#- cmd: C:\GOPATH\bin\gor.exe -h
+#- cmd: gor.exe -h
 test_script:
 - cmd: go test -v ./...
