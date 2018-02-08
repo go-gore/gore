@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	version = "0.2.1"
+	version = "0.2.2"
 
 	usage = `Usage: gor (options) [args]
 `
@@ -67,13 +67,19 @@ func main() {
 	args := flag.Args()
 
 	// read the source file at (non-flag) argument slice position 0
-	b, err := ioutil.ReadFile(args[0])
+	inBytes, err := ioutil.ReadFile(args[0])
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// remove the shebang line of the gore source file
-	preFile := bytes.SplitN(b, []byte("\n"), 2)
+	// remove the shebang line of the gor source file (if present)
+	var outBytes []byte
+	if bytes.HasPrefix(inBytes, []byte("#!")) {
+		preFileList := bytes.SplitN(inBytes, []byte("\n"), 2)
+		outBytes = preFileList[1]
+	} else {
+		outBytes = inBytes
+	}
 
 	// parse file paths
 	gorRelativeFilePath := args[0]
@@ -88,7 +94,7 @@ func main() {
 	outPath := filepath.Join(dirPath, outName)
 
 	// write the temp go source file to be executed
-	err = ioutil.WriteFile(outPath, preFile[1], 0644)
+	err = ioutil.WriteFile(outPath, outBytes, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
