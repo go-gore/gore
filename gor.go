@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	version = "0.2.0"
+	version = "0.2.1"
 
 	usage = `Usage: gor (options) [args]
 `
@@ -47,19 +47,6 @@ func init() {
 	helpLong = flag.Bool("help", false, "Help")
 	usageLong = flag.Bool("usage", false, "Usage")
 }
-
-//type Session struct {
-//	FilePath       string
-//	File           *ast.File
-//	Fset           *token.FileSet
-//	Types          *types.Config
-//	TypeInfo       types.Info
-//	ExtraFilePaths []string
-//	ExtraFiles     []*ast.File
-//
-//	mainBody         *ast.BlockStmt
-//	storedBodyLength int
-//}
 
 func main() {
 	flag.Parse()
@@ -127,53 +114,12 @@ func main() {
 		}
 	}
 
-	// TEMP CODE
-	//src, _ := ioutil.ReadFile(outPath)
-	//s := &Session{
-	//	Fset: token.NewFileSet(),
-	//	Types: &types.Config{
-	//		Importer: importer.Default(),
-	//	},
-	//}
-	//s.FilePath = outPath
-	//
-	//astf, err := parser.ParseFile(s.Fset, "", src, parser.Mode(0))
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//packages := make([]string, len(astf.Imports))
-	//for i, imprt := range astf.Imports {
-	//	packages[i] = imprt.Path.Value
-	//}
-	//
-	//var files []string
-	//for _, packageName := range packages {
-	//	packageName = strings.Replace(packageName, "\"", "", -1)  // remove the double quotes around package names
-	//	goPkg, err := build.Import(packageName, ".", 0)
-	//	if err != nil {
-	//		var err2 error
-	//		goPkg, err2 = build.ImportDir(packageName, 0)
-	//		if err2 != nil {
-	//			log.Fatal(err)
-	//		}
-	//	}
-	//
-	//	for _, f := range goPkg.GoFiles {
-	//		files = append(files, filepath.Join(goPkg.Dir, f))
-	//	}
-	//}
-	//
-	//for _, afile := range files {
-	//	fmt.Println(afile)
-	//}
-
 	// create the `go run` command for execution of the source file
 	cmdArgs := []string{"run"}
 	if len(args) > 1 {
 		cmdArgs = append(cmdArgs, args[1:]...) // arguments to the executable excluding the path to the .gor file at slice position 0
 	}
-	cmdArgs = append(cmdArgs, outPath) // the go source file with the main function requested by user
+	cmdArgs = append(cmdArgs, outPath)         // the go source file with the main function requested by user
 	cmdArgs = append(cmdArgs, goSourceList...) // additional source file paths in same directory
 
 	//fmt.Println(cmdArgs)
