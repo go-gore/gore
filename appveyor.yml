@@ -8,9 +8,9 @@ environment:
   GOPATH: C:\GOPATH
   GOBIN: C:\GOPATH\bin
 build_script:
-#- cmd: go get -v -t github.com/go-rillas/gor/...
-#- cmd: gor.exe -h
-- ps: go get -v -t github.com/go-rillas/gor
-- ps: gor.exe -h
+- cmd: set PATH=%GOBIN%;%PATH%
+- cmd: go get -v -t github.com/go-rillas/gor/...
+- cmd: %GOBIN%\gor.exe -h
+- cmd: gor.exe -h
 test_script:
-- ps: go test -v ./...
+- cmd: go test -v ./...
