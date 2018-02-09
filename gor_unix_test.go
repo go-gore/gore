@@ -12,7 +12,7 @@ import (
 // Golang stdlib: bytes package
 
 func TestBytesDirectOnUnix(t *testing.T) {
-	testpath := filepath.Join("test", "bytes")
+	testpath := filepath.Join("test", "go_stdlib", "bytes")
 	response := subprocess.RunShell("", "", testpath)
 	if response.StdOut != "true\n" {
 		t.Errorf("[FAIL] Expected response of 'true' and received response '%s'", response.StdOut)
@@ -20,7 +20,7 @@ func TestBytesDirectOnUnix(t *testing.T) {
 }
 
 func TestBytesGorDirectOnUnix(t *testing.T) {
-	testpath := filepath.Join("test", "bytes.gor")
+	testpath := filepath.Join("test", "go_stdlib", "bytes.gor")
 	response := subprocess.RunShell("", "", testpath)
 	if response.StdOut != "true\n" {
 		t.Errorf("[FAIL] Expected response of 'true' and received response '%s'", response.StdOut)
