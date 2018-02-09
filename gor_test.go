@@ -16,6 +16,9 @@ func TestBuiltin(t *testing.T) {
 	if response.StdOut != "2" {
 		t.Errorf("[FAIL] Expected response of '2' and received response '%s'", response.StdOut)
 	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
 }
 
 func TestBuiltinGor(t *testing.T) {
@@ -23,6 +26,9 @@ func TestBuiltinGor(t *testing.T) {
 	response := subprocess.RunShell("", "", "gor", testpath)
 	if response.StdOut != "2" {
 		t.Errorf("[FAIL] Expected response of '2' and received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
 	}
 }
 
@@ -34,6 +40,9 @@ func TestBytes(t *testing.T) {
 	if response.StdOut != "true" {
 		t.Errorf("[FAIL] Expected response of 'true' and received response '%s'", response.StdOut)
 	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
 }
 
 func TestBytesGor(t *testing.T) {
@@ -41,6 +50,9 @@ func TestBytesGor(t *testing.T) {
 	response := subprocess.RunShell("", "", "gor", testpath)
 	if response.StdOut != "true" {
 		t.Errorf("[FAIL] Expected response of 'true' and received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
 	}
 }
 
