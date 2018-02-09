@@ -7,7 +7,6 @@ import (
 	"github.com/go-rillas/subprocess"
 )
 
-
 // Golang stdlib builtin function
 
 func TestBuiltin(t *testing.T) {
@@ -56,4 +55,26 @@ func TestBytesGor(t *testing.T) {
 	}
 }
 
+// Golang stdlib: compress package
 
+func TestCompress(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "compress")
+	response := subprocess.RunShell("", "", "gor", testpath)
+	if response.StdOut != "A long time ago in a galaxy far, far away..." {
+		t.Errorf("[FAIL] Expected response of 'A long time ago in a galaxy far, far away...' and received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}
+
+func TestCompressGor(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "compress.gor")
+	response := subprocess.RunShell("", "", "gor", testpath)
+	if response.StdOut != "A long time ago in a galaxy far, far away..." {
+		t.Errorf("[FAIL] Expected response of 'A long time ago in a galaxy far, far away...' and received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}

@@ -57,3 +57,28 @@ func TestBytesGorDirectOnUnix(t *testing.T) {
 		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
 	}
 }
+
+
+// Golang stdlib: compress package
+
+func TestCompressDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "compress")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "A long time ago in a galaxy far, far away..." {
+		t.Errorf("[FAIL] Expected response of 'A long time ago in a galaxy far, far away...' and received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}
+
+func TestCompressGorDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "compress.gor")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "A long time ago in a galaxy far, far away..." {
+		t.Errorf("[FAIL] Expected response of 'A long time ago in a galaxy far, far away...' and received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}
