@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	fmt.Println(bytes.Contains([]byte("seafood"), []byte("foo")))
+	fmt.Print(bytes.Contains([]byte("seafood"), []byte("foo")))
 }
