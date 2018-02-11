@@ -82,3 +82,27 @@ func TestCompressGorDirectOnUnix(t *testing.T) {
 		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
 	}
 }
+
+// Golang stdlib: container package
+
+func TestContainerDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "container")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "1 2 3 5 " {
+		t.Errorf("[FAIL] Expected response of '1 2 3 5' and received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}
+
+func TestContainerGorDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "container.gor")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "1 2 3 5 " {
+		t.Errorf("[FAIL] Expected response of '1 2 3 5' and received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}
