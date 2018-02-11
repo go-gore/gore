@@ -106,3 +106,27 @@ func TestContainerGorDirectOnUnix(t *testing.T) {
 		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
 	}
 }
+
+// Golang stdlib: crypto package
+
+func TestCryptoDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "crypto")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "59 7f 6a 54 00 10 f9 4c 15 d7 18 06 a9 9a 2c 87 10 e7 47 bd" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}
+
+func TestCryptoGorDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "crypto.gor")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "59 7f 6a 54 00 10 f9 4c 15 d7 18 06 a9 9a 2c 87 10 e7 47 bd" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}
