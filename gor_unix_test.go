@@ -130,3 +130,27 @@ func TestCryptoGorDirectOnUnix(t *testing.T) {
 		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
 	}
 }
+
+// Golang stdlib: encoding package
+
+func TestEncodingDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "encoding")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "[{Name:Platypus Order:Monotremata} {Name:Quoll Order:Dasyuromorphia}]" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}
+
+func TestEncodingGorDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "encoding.gor")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "[{Name:Platypus Order:Monotremata} {Name:Quoll Order:Dasyuromorphia}]" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}
