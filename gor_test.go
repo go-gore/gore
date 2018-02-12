@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/go-rillas/subprocess"
+	"strings"
 )
 
 // Golang stdlib builtin function
@@ -148,5 +149,29 @@ func TestEncodingGor(t *testing.T) {
 	}
 	if response.ExitCode != 0 {
 		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
+	}
+}
+
+// Golang stdlib: errors package
+
+func TestErrors(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "errors")
+	response := subprocess.RunShell("", "", "gor", testpath)
+	if !strings.HasPrefix(response.StdErr, "emit macho dwarf: elf header corrupted") {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdErr)
+	}
+	if response.ExitCode == 0 {
+		t.Errorf("[FAIL] Returned zero exit code value and did not expect zero exit code: %d", response.ExitCode)
+	}
+}
+
+func TestErrorsGor(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "errors.gor")
+	response := subprocess.RunShell("", "", "gor", testpath)
+	if !strings.HasPrefix(response.StdErr, "emit macho dwarf: elf header corrupted") {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdErr)
+	}
+	if response.ExitCode == 0 {
+		t.Errorf("[FAIL] Returned zero exit code value and did not expect zero exit code: %d", response.ExitCode)
 	}
 }
