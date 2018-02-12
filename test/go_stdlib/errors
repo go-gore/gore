@@ -1,0 +1,16 @@
+#!/usr/bin/env gor
+package main
+
+import (
+	"errors"
+	"os"
+	"fmt"
+)
+
+func main() {
+	err := errors.New("emit macho dwarf: elf header corrupted")
+	if err != nil {
+		os.Stderr.WriteString(fmt.Sprintf("%v\n", err))
+		os.Exit(1)
+	}
+}
