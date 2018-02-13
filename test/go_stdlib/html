@@ -1,0 +1,12 @@
+#!/usr/bin/env gor
+package main
+
+import (
+	"fmt"
+	"html"
+)
+
+func main() {
+	const s = `"Fran & Freddie's Diner" <tasty@example.com>`
+	fmt.Print(html.EscapeString(s))
+}
