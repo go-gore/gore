@@ -180,3 +180,27 @@ func TestErrorsGorDirectOnUnix(t *testing.T) {
 		t.Errorf("[FAIL] Returned zero exit code value and did not expect zero exit code: %d", response.ExitCode)
 	}
 }
+
+// Golang stdlib: html package
+
+func TestHtmlDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "html")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "&#34;Fran &amp; Freddie&#39;s Diner&#34; &lt;tasty@example.com&gt;" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+	}
+}
+
+func TestHtmlGorDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "go_stdlib", "html.gor")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "&#34;Fran &amp; Freddie&#39;s Diner&#34; &lt;tasty@example.com&gt;" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+	}
+}
