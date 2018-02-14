@@ -1,0 +1,24 @@
+#!/usr/bin/env gor
+
+package main
+
+import "flag"
+import "fmt"
+
+var testBool, printString *bool
+var testString *string
+
+func init() {
+	testBool = flag.Bool("t", false, "A test boolean flag")
+    printString = flag.Bool("ps", false, "Print the string instead of boolean")
+    testString = flag.String("teststring", "", "A test string flag")
+}
+
+func main() {
+    flag.Parse()
+    if *printString {
+        fmt.Printf("%s", *testString)
+    } else {
+        fmt.Printf("%v", *testBool)
+    }
+}
