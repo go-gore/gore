@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	version = "0.2.2"
+	version = "0.3.0"
 
 	usage = `Usage: gor (options) [args]
 `
@@ -122,11 +122,11 @@ func main() {
 
 	// create the `go run` command for execution of the source file
 	cmdArgs := []string{"run"}
+	cmdArgs = append(cmdArgs, outPath)         // the go source file with the main function requested by user
+	cmdArgs = append(cmdArgs, goSourceList...) // additional source file paths in same directory
 	if len(args) > 1 {
 		cmdArgs = append(cmdArgs, args[1:]...) // arguments to the executable excluding the path to the .gor file at slice position 0
 	}
-	cmdArgs = append(cmdArgs, outPath)         // the go source file with the main function requested by user
-	cmdArgs = append(cmdArgs, goSourceList...) // additional source file paths in same directory
 
 	//fmt.Println(cmdArgs)
 
