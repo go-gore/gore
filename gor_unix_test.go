@@ -4,10 +4,10 @@ package main
 
 import (
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/go-rillas/subprocess"
-	"strings"
 )
 
 // Golang stdlib builtin function
@@ -34,7 +34,6 @@ func TestBuiltinGorDirectOnUnix(t *testing.T) {
 	}
 }
 
-
 // Golang stdlib: bytes package
 
 func TestBytesDirectOnUnix(t *testing.T) {
@@ -58,7 +57,6 @@ func TestBytesGorDirectOnUnix(t *testing.T) {
 		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
 	}
 }
-
 
 // Golang stdlib: compress package
 
@@ -155,7 +153,6 @@ func TestEncodingGorDirectOnUnix(t *testing.T) {
 		t.Errorf("[FAIL] Returned non-zero exit code value: %d", response.ExitCode)
 	}
 }
-
 
 // Golang stdlib: errors package
 

@@ -2,10 +2,10 @@ package main
 
 import (
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/go-rillas/subprocess"
-	"strings"
 )
 
 // TODO:
@@ -178,7 +178,6 @@ func TestErrorsGor(t *testing.T) {
 		t.Errorf("[FAIL] Returned zero exit code value and did not expect zero exit code: %d", response.ExitCode)
 	}
 }
-
 
 // Golang stdlib: html package
 
