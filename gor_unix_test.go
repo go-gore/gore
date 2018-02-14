@@ -201,3 +201,80 @@ func TestHtmlGorDirectOnUnix(t *testing.T) {
 		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
 	}
 }
+
+
+// Argument handling tests
+
+//   Test short boolean style flags
+
+func TestArgBooleanShortDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "arg", "args")
+
+	// test without argument for default 'false' value
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "false" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+	}
+
+	// test with argument for re-defined true value
+	response2 := subprocess.RunShell("", "", testpath, "-t")
+	if response2.StdOut != "true" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response2.StdOut)
+	}
+	if response2.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response2.ExitCode)
+	}
+}
+
+func TestArgBooleanShortGorDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "arg", "args.gor")
+
+	// test without argument for default 'false' value
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "false" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+	}
+
+	// test with argument for re-defined true value
+	response2 := subprocess.RunShell("", "", testpath, "-t")
+	if response2.StdOut != "true" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response2.StdOut)
+	}
+	if response2.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response2.ExitCode)
+	}
+}
+
+//   Test long defintion flags
+
+func TestArgStringLongDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "arg", "args")
+
+	// test without argument for default 'false' value
+	response := subprocess.RunShell("", "", testpath, "--ps", "--teststring", "'this is the test'")
+	if response.StdOut != "this is the test" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+	}
+}
+
+func TestArgStringLongGorDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "arg", "args.gor")
+
+	// test without argument for default 'false' value
+	response := subprocess.RunShell("", "", testpath, "--ps", "--teststring", "'this is the test'")
+	if response.StdOut != "this is the test" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+	}
+}
