@@ -1,5 +1,9 @@
 ## Changelog
 
+### v0.3.0
+
+- added support for the use of arguments to the Go source executed with gor
+
 ### v0.2.2
 
 - fix: test for the presence of a shebang line before removal of the first line of the file read
