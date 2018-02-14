@@ -257,7 +257,7 @@ func TestArgStringLong(t *testing.T) {
 	testpath := filepath.Join("test", "arg", "args")
 
 	// test without argument for default 'false' value
-	response := subprocess.RunShell("", "", "gor", testpath, "--ps", "--teststring", "'this is the test'")
+	response := subprocess.RunShell("", "", "gor", testpath, "--ps", "--teststring", "\"this is the test\"")
 	if response.StdOut != "this is the test" {
 		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
 	}
@@ -270,7 +270,7 @@ func TestArgStringLongGor(t *testing.T) {
 	testpath := filepath.Join("test", "arg", "args.gor")
 
 	// test without argument for default 'false' value
-	response := subprocess.RunShell("", "", "gor", testpath, "--ps", "--teststring", "'this is the test'")
+	response := subprocess.RunShell("", "", "gor", testpath, "--ps", "--teststring", "\"this is the test\"")
 	if response.StdOut != "this is the test" {
 		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
 	}
