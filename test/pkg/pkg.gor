@@ -1,0 +1,10 @@
+#!/usr/bin/env gor
+
+package main
+
+import "fmt"
+import "./onedeep"
+
+func main() {
+    fmt.Print(onedeep.ReturnHello())
+}
