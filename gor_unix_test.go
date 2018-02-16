@@ -202,7 +202,6 @@ func TestHtmlGorDirectOnUnix(t *testing.T) {
 	}
 }
 
-
 // Argument handling tests
 
 //   Test short boolean style flags
@@ -272,6 +271,30 @@ func TestArgStringLongGorDirectOnUnix(t *testing.T) {
 	// test without argument for default 'false' value
 	response := subprocess.RunShell("", "", testpath, "--ps", "--teststring", "test")
 	if response.StdOut != "test" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+	}
+}
+
+// Package import tests
+
+func TestPackageImportDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "pkg", "pkg")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "Hello" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+	}
+}
+
+func TestPackageImportGorDirectOnUnix(t *testing.T) {
+	testpath := filepath.Join("test", "pkg", "pkg.gor")
+	response := subprocess.RunShell("", "", testpath)
+	if response.StdOut != "Hello" {
 		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
 	}
 	if response.ExitCode != 0 {

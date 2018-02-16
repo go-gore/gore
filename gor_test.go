@@ -8,9 +8,6 @@ import (
 	"github.com/go-rillas/subprocess"
 )
 
-// TODO:
-// - add argument handling tests with the flag package
-
 // Golang stdlib builtin function
 
 func TestBuiltin(t *testing.T) {
@@ -251,7 +248,7 @@ func TestArgBooleanShortGor(t *testing.T) {
 	}
 }
 
-//   Test long defintion flags
+//   Test long definition flags
 
 func TestArgStringLong(t *testing.T) {
 	testpath := filepath.Join("test", "arg", "args")
@@ -272,6 +269,30 @@ func TestArgStringLongGor(t *testing.T) {
 	// test without argument for default 'false' value
 	response := subprocess.RunShell("", "", "gor", testpath, "--ps", "--teststring", "test")
 	if response.StdOut != "test" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+	}
+}
+
+// Package import tests
+
+func TestPackageImport(t *testing.T) {
+	testpath := filepath.Join("test", "pkg", "pkg")
+	response := subprocess.RunShell("", "", "gor", testpath)
+	if response.StdOut != "Hello" {
+		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
+	}
+	if response.ExitCode != 0 {
+		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+	}
+}
+
+func TestPackageImportGor(t *testing.T) {
+	testpath := filepath.Join("test", "pkg", "pkg.gor")
+	response := subprocess.RunShell("", "", "gor", testpath)
+	if response.StdOut != "Hello" {
 		t.Errorf("[FAIL] Expected response does not match received response '%s'", response.StdOut)
 	}
 	if response.ExitCode != 0 {
