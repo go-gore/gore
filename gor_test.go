@@ -286,6 +286,7 @@ func TestPackageImport(t *testing.T) {
 	}
 	if response.ExitCode != 0 {
 		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+		t.Errorf("%s", response.StdErr)
 	}
 }
 
@@ -297,5 +298,6 @@ func TestPackageImportGor(t *testing.T) {
 	}
 	if response.ExitCode != 0 {
 		t.Errorf("[FAIL] Returned non-zero exit code value and did not expect non-zero exit code: %d", response.ExitCode)
+		t.Errorf("%s", response.StdErr)
 	}
 }
