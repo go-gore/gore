@@ -3,7 +3,7 @@
 package main
 
 import "fmt"
-import "./onedeep"
+import "github.com/go-rillas/gor/test/pkg/onedeep"
 
 func main() {
     fmt.Print(onedeep.ReturnHello())
