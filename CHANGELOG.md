@@ -1,5 +1,11 @@
 ## Changelog
 
+### v0.4.1
+
+- modified os.Exit calls to log.Fatal calls with stderr messages passed to the user
+- refactored executable path definition, eliminated unnecessary string assignments
+- improved source code comment documentation
+
 ### v0.4.0
 
 - refactored execution approach to background compile with `go build`, followed by execution of the compiled binary (and away from `go run`)
