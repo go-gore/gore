@@ -67,6 +67,10 @@ func main() {
 
 	args := flag.Args()
 
+	//////////////////////////////
+	// COMPILE BINARY FROM SOURCE
+	//////////////////////////////
+
 	// read the source file at (non-flag) argument slice position 0
 	inBytes, err := ioutil.ReadFile(args[0])
 	if err != nil {
@@ -121,7 +125,7 @@ func main() {
 		}
 	}
 
-	// create the `go run` command for execution of the source file
+	// create the executable outfile path based upon platform
 	var tempRunPath string
 	if runtime.GOOS == "windows" {
 		tempRunPath = "run_" + baseName + ".exe"
@@ -129,28 +133,21 @@ func main() {
 		tempRunPath = "run_" + baseName
 	}
 
+	// create the go build command to compile the executable
 	cmdArgs := []string{"build", "-o", tempRunPath}
 	cmdArgs = append(cmdArgs, outPath)         // the go source file with the main function requested by user
 	cmdArgs = append(cmdArgs, goSourceList...) // additional source file paths in same directory
 
-	// Define the command for execution of the source file
-	// & capture the stdout and stderr pipes to push through these streams during execution
+	// Define the go build command for compile of the source
+	// & capture the stderr pipe for error reporting
 	cmd := exec.Command("go", cmdArgs...)
-	stdoutPipe, stdOutPipeErr := cmd.StdoutPipe()
 	stderrPipe, stdErrPipeErr := cmd.StderrPipe()
-	if stdOutPipeErr != nil {
-		log.Fatal(stdOutPipeErr)
-	}
 	if stdErrPipeErr != nil {
 		log.Fatal(stdErrPipeErr)
 	}
 	// execute the source code
 	if startErr := cmd.Start(); startErr != nil {
 		log.Fatal(startErr)
-	}
-	// write to stdout if data present
-	if _, stdOutErr := io.Copy(os.Stdout, stdoutPipe); stdOutErr != nil {
-		log.Fatal(stdOutErr)
 	}
 	// write to stderr if data present
 	_, stdErrErr := io.Copy(os.Stderr, stderrPipe)
@@ -160,36 +157,28 @@ func main() {
 
 	returnedErr := cmd.Wait()
 	if returnedErr != nil {
+		removeTempGoSource(outPath)
 		os.Exit(1)
 	}
 
-	// defer temp file removal to follow execution of the source
-	// the logic here is probably not necessary but is intended to protect against deleting
-	// something that we should not be deleting from the file system in case I am wrong.
-	if strings.HasPrefix(filepath.Base(outPath), "run_") && filepath.Ext(outPath) == ".go" {
-		os.Remove(outPath)
-	}
+	// remove the temporary Go source file that was created from the Go runner source file
+	removeTempGoSource(outPath)
 
-	// execute the compiled binary file
+
+	////////////////////
+	// BINARY EXECUTION
+	////////////////////
+
 	runPath, pathErr := filepath.Abs(tempRunPath)
 	if pathErr != nil {
 		log.Fatal(pathErr)
 	}
 
+	// define execution command
 	var runCmd []string
 	var executable string
 
 	executable = runPath
-
-	// define cross-platform approach to run the executable binary
-	//if runtime.GOOS == "windows" {
-	//	executable = `cmd.exe`           // executable is defined as "cmd.exe" for Windows
-	//	runCmd = append(runCmd, "/C")    // define shell flag to execute go binary on Windows
-	//	runCmd = append(runCmd, runPath) // define path to the executable file that cmd.exe will execute
-	//	//executable = runPath + ".exe"   // .exe executable files on Windows
-	//} else {
-	//	executable = runPath // executable is direct path to executable file compiled from Go source on Unix
-	//}
 
 	// define any command line arguments that were requested by user
 	if len(args) > 1 {
@@ -198,7 +187,6 @@ func main() {
 
 	defer removeRunFile(runPath) // defer removal of the run file
 
-	//cmdRun := exec.Command(runPath, runCmd...)
 	cmdRun := exec.Command(executable, runCmd...)
 
 	stdoutPipeRun, stdOutPipeErrRun := cmdRun.StdoutPipe()
@@ -229,6 +217,12 @@ func main() {
 		os.Exit(1)
 	}
 
+}
+
+func removeTempGoSource(outPath string) {
+	if strings.HasPrefix(filepath.Base(outPath), "run_") && filepath.Ext(outPath) == ".go" {
+		os.Remove(outPath)
+	}
 }
 
 func removeRunFile(runPath string) {
