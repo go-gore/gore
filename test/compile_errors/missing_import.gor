@@ -1,0 +1,6 @@
+#!/usr/bin/env gor
+package main
+
+func main() {
+	fmt.Print("test")
+}
