@@ -2,4 +2,4 @@
 
 go install ./...
 
-test/runner.gor
+test/go_stdlib/builtin
