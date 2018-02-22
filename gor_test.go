@@ -300,3 +300,36 @@ func TestPackageImportGor(t *testing.T) {
 		t.Errorf("%s", response.StdErr)
 	}
 }
+
+
+// Compiler error tests
+
+func TestCompileFailMissingImport(t *testing.T) {
+	testpath := filepath.Join("test", "compile_errors", "missing_import")
+	response := subprocess.RunShell("", "", "gor", testpath)
+	if response.StdOut != "" {
+		t.Errorf("[FAIL] Expected no standard output response and received '%s'", response.StdOut)
+	}
+	if len(response.StdErr) == 0 {
+		t.Errorf("[FAIL] No stderr output when stderr was expected")
+	}
+	if response.ExitCode == 0 {
+		t.Errorf("[FAIL] Returned zero exit code value and did not expect zero exit code.  Returned code: %d", response.ExitCode)
+		t.Errorf("%s", response.StdErr)
+	}
+}
+
+func TestCompileFailMissingImportGor(t *testing.T) {
+	testpath := filepath.Join("test", "compile_errors", "missing_import.gor")
+	response := subprocess.RunShell("", "", "gor", testpath)
+	if response.StdOut != "" {
+		t.Errorf("[FAIL] Expected no standard output response and received '%s'", response.StdOut)
+	}
+	if len(response.StdErr) == 0 {
+		t.Errorf("[FAIL] No stderr output when stderr was expected")
+	}
+	if response.ExitCode == 0 {
+		t.Errorf("[FAIL] Returned zero exit code value and did not expect zero exit code.  Returned code: %d", response.ExitCode)
+		t.Errorf("%s", response.StdErr)
+	}
+}
