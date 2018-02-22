@@ -175,9 +175,10 @@ func main() {
 
 	// define cross-platform approach to run the executable binary
 	if runtime.GOOS == "windows" {
-		executable = `cmd.exe`           // executable is defined as "cmd.exe" for Windows
-		runCmd = append(runCmd, "/C")    // define shell flag to execute go binary on Windows
-		runCmd = append(runCmd, runPath) // define path to the executable file that cmd.exe will execute
+		//executable = `cmd.exe`           // executable is defined as "cmd.exe" for Windows
+		//runCmd = append(runCmd, "/C")    // define shell flag to execute go binary on Windows
+		//runCmd = append(runCmd, runPath + ".exe") // define path to the executable file that cmd.exe will execute
+		executable = runPath + ".exe"   // .exe executable files on Windows
 	} else {
 		executable = runPath // executable is direct path to executable file compiled from Go source on Unix
 	}
