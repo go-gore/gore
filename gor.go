@@ -122,7 +122,13 @@ func main() {
 	}
 
 	// create the `go run` command for execution of the source file
-	tempRunPath := "run_" + baseName
+	var tempRunPath string
+	if runtime.GOOS == "windows" {
+		tempRunPath = "run_" + baseName + ".exe"
+	} else {
+		tempRunPath = "run_" + baseName
+	}
+
 	cmdArgs := []string{"build", "-o", tempRunPath}
 	cmdArgs = append(cmdArgs, outPath)         // the go source file with the main function requested by user
 	cmdArgs = append(cmdArgs, goSourceList...) // additional source file paths in same directory
@@ -173,15 +179,17 @@ func main() {
 	var runCmd []string
 	var executable string
 
+	executable = runPath
+
 	// define cross-platform approach to run the executable binary
-	if runtime.GOOS == "windows" {
-		//executable = `cmd.exe`           // executable is defined as "cmd.exe" for Windows
-		//runCmd = append(runCmd, "/C")    // define shell flag to execute go binary on Windows
-		//runCmd = append(runCmd, runPath + ".exe") // define path to the executable file that cmd.exe will execute
-		executable = runPath + ".exe"   // .exe executable files on Windows
-	} else {
-		executable = runPath // executable is direct path to executable file compiled from Go source on Unix
-	}
+	//if runtime.GOOS == "windows" {
+	//	executable = `cmd.exe`           // executable is defined as "cmd.exe" for Windows
+	//	runCmd = append(runCmd, "/C")    // define shell flag to execute go binary on Windows
+	//	runCmd = append(runCmd, runPath) // define path to the executable file that cmd.exe will execute
+	//	//executable = runPath + ".exe"   // .exe executable files on Windows
+	//} else {
+	//	executable = runPath // executable is direct path to executable file compiled from Go source on Unix
+	//}
 
 	// define any command line arguments that were requested by user
 	if len(args) > 1 {
