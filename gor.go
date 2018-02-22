@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	version = "0.3.0"
+	version = "0.4.0"
 
 	usage = `Usage: gor (options) [args]
 `
@@ -121,14 +121,10 @@ func main() {
 	}
 
 	// create the `go run` command for execution of the source file
-	cmdArgs := []string{"run"}
+	tempRunPath := "run_" + baseName
+	cmdArgs := []string{"build", "-o", tempRunPath}
 	cmdArgs = append(cmdArgs, outPath)         // the go source file with the main function requested by user
 	cmdArgs = append(cmdArgs, goSourceList...) // additional source file paths in same directory
-	if len(args) > 1 {
-		cmdArgs = append(cmdArgs, args[1:]...) // arguments to the executable excluding the path to the .gor file at slice position 0
-	}
-
-	//fmt.Println(cmdArgs)
 
 	// Define the command for execution of the source file
 	// & capture the stdout and stderr pipes to push through these streams during execution
@@ -156,14 +152,66 @@ func main() {
 	}
 
 	returnedErr := cmd.Wait()
+	if returnedErr != nil {
+		os.Exit(1)
+	}
+
 	// defer temp file removal to follow execution of the source
 	// the logic here is probably not necessary but is intended to protect against deleting
 	// something that we should not be deleting from the file system in case I am wrong.
 	if strings.HasPrefix(filepath.Base(outPath), "run_") && filepath.Ext(outPath) == ".go" {
 		os.Remove(outPath)
 	}
-	if returnedErr != nil {
-		os.Exit(1) // assign a default non-zero fail code value of 1 for all failures
+
+	// execute the compiled binary file
+	runPath, pathErr := filepath.Abs(tempRunPath)
+	if pathErr != nil {
+		log.Fatal(pathErr)
 	}
 
+	var runCmd []string
+	if len(args) > 1 {
+		runCmd = append(runCmd, args[1:]...) // arguments to the executable excluding the path to the executable file
+	}
+
+	defer removeRunFile(runPath)
+	cmdRun := exec.Command(runPath, runCmd...)
+	stdoutPipeRun, stdOutPipeErrRun := cmdRun.StdoutPipe()
+	stderrPipeRun, stdErrPipeErrRun := cmdRun.StderrPipe()
+	if stdOutPipeErrRun != nil {
+		log.Fatal(stdOutPipeErrRun)
+	}
+	if stdErrPipeErrRun != nil {
+		log.Fatal(stdErrPipeErrRun)
+	}
+	// execute the source code
+	if startErrRun := cmdRun.Start(); startErrRun != nil {
+		log.Fatal(startErrRun)
+	}
+	// write to stdout if data present
+	if _, stdOutErrRun := io.Copy(os.Stdout, stdoutPipeRun); stdOutErrRun != nil {
+		log.Fatal(stdOutErrRun)
+	}
+	// write to stderr if data present
+	_, stdErrErrRun := io.Copy(os.Stderr, stderrPipeRun)
+	if stdErrErrRun != nil {
+		log.Fatal(stdErrErrRun)
+	}
+
+	returnedErrRun := cmdRun.Wait()
+	if returnedErrRun != nil {
+		removeRunFile(runPath)  // remove the temporary binary used to execute code before exit with status code 1
+		os.Exit(1)
+	}
+
+
+}
+
+func removeRunFile(runPath string) {
+	if _, err := os.Stat(runPath); err == nil {
+		// temp runner file exists, let's remove it
+		os.Remove(runPath)
+	} else {
+		fmt.Printf("%v", err)
+	}
 }
