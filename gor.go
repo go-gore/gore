@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -170,12 +171,27 @@ func main() {
 	}
 
 	var runCmd []string
+	var executable string
+
+	// define cross-platform approach to run the executable binary
+	if runtime.GOOS == "windows" {
+		executable = `cmd.exe`           // executable is defined as "cmd.exe" for Windows
+		runCmd = append(runCmd, "/C")    // define shell flag to execute go binary on Windows
+		runCmd = append(runCmd, runPath) // define path to the executable file that cmd.exe will execute
+	} else {
+		executable = runPath // executable is direct path to executable file compiled from Go source on Unix
+	}
+
+	// define any command line arguments that were requested by user
 	if len(args) > 1 {
 		runCmd = append(runCmd, args[1:]...) // arguments to the executable excluding the path to the executable file
 	}
 
-	defer removeRunFile(runPath)
-	cmdRun := exec.Command(runPath, runCmd...)
+	defer removeRunFile(runPath) // defer removal of the run file
+
+	//cmdRun := exec.Command(runPath, runCmd...)
+	cmdRun := exec.Command(executable, runCmd...)
+
 	stdoutPipeRun, stdOutPipeErrRun := cmdRun.StdoutPipe()
 	stderrPipeRun, stdErrPipeErrRun := cmdRun.StderrPipe()
 	if stdOutPipeErrRun != nil {
@@ -200,10 +216,9 @@ func main() {
 
 	returnedErrRun := cmdRun.Wait()
 	if returnedErrRun != nil {
-		removeRunFile(runPath)  // remove the temporary binary used to execute code before exit with status code 1
+		removeRunFile(runPath) // remove the temporary binary used to execute code before exit with status code 1
 		os.Exit(1)
 	}
-
 
 }
 
