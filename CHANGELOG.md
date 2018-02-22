@@ -1,5 +1,11 @@
 ## Changelog
 
+### v0.4.0
+
+- refactored execution approach to background compile with `go build`, followed by execution of the compiled binary (and away from `go run`)
+- refactored temporary Go source file cleanup to a new private function
+- refactored temporary executable binary cleanup to a new private function
+
 ### v0.3.0
 
 - added support for the use of arguments to the Go source executed with gor
