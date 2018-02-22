@@ -9,7 +9,6 @@ import (
 )
 
 // Golang stdlib builtin function
-
 func TestBuiltin(t *testing.T) {
 	testpath := filepath.Join("test", "go_stdlib", "builtin")
 	response := subprocess.RunShell("", "", "gor", testpath)
